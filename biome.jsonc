@@ -1,0 +1,96 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.0.0-beta.6/schema.json",
+  "files": {
+    "experimentalScannerIgnores": [
+      ".git",
+      ".vercel",
+      ".turbo",
+      "node_modules",
+      ".github"
+    ],
+    "includes": ["**"]
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "defaultBranch": "main",
+    "useIgnoreFile": true
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 80,
+    "attributePosition": "auto",
+    "includes": ["**"]
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "off"
+      }
+    }
+  },
+  "linter": {
+    "includes": ["**"],
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "useLiteralKeys": "off",
+        "noExcessiveNestedTestSuites": "off",
+        "useArrowFunction": "off",
+        "noStaticOnlyClass": "off",
+        "noForEach": "off",
+        // There are a lot of places we're using "useless" switch cases to make code more understandable.
+        "noUselessSwitchCase": "info",
+        "noUselessContinue": "off",
+        "useDateNow": "off" // Biome2 upgrade
+      },
+      "style": {
+        "useNodejsImportProtocol": "off",
+        "useTemplate": "off",
+        "noUnusedTemplateLiteral": "off",
+        "noInferrableTypes": "off",
+        "useAsConstAssertion": "off",
+        "useExponentiationOperator": "off",
+        "useShorthandFunctionType": "off",
+        "noParameterAssign": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "useNumberNamespace": "error",
+        "noUselessElse": "off" // Biome2 upgrade
+      },
+      "correctness": {
+        "noUnusedVariables": "error",
+        "noUnusedImports": "error",
+        "noUnusedFunctionParameters": "off" // Biome2 upgrade
+      },
+      "nursery": {
+        "noFloatingPromises": "error"
+      },
+      "performance": {
+        "noDelete": "off"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
+  "json": {
+    "formatter": {
+      "enabled": true,
+      "trailingCommas": "none"
+    },
+    "parser": {
+      "allowComments": true,
+      "allowTrailingCommas": false
+    }
+  }
+}

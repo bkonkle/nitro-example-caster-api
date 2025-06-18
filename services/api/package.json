@@ -1,0 +1,25 @@
+{
+  "name": "@caster/api",
+  "private": true,
+  "scripts": {
+    "build": "nitro build",
+    "db.migrate": "prisma migrate dev",
+    "db.deploy": "prisma migrate deploy",
+    "db.reset": "prisma migrate reset",
+    "dev": "nitro dev",
+    "docker": "docker compose -f docker-compose.yml",
+    "generate": "prisma generate --schema prisma/schema.prisma",
+    "prepare": "nitro prepare",
+    "preview": "node .output/server/index.mjs"
+  },
+  "dependencies": {
+    "@prisma/client": "6.10.1"
+  },
+  "devDependencies": {
+    "nitropack": "^2.11.12",
+    "prisma": "^6.10.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
