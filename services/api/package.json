@@ -1,6 +1,9 @@
 {
   "name": "@caster/api",
+  "version": "1.0.0",
   "private": true,
+  "sideEffects": false,
+  "type": "module",
   "scripts": {
     "build": "nitro build",
     "db.migrate": "prisma migrate dev",
@@ -13,9 +16,15 @@
     "preview": "node .output/server/index.mjs"
   },
   "dependencies": {
-    "@prisma/client": "6.10.1"
+    "@caster/roles": "workspace:*",
+    "@caster/auth": "workspace:*",
+    "@caster/responses": "workspace:*",
+    "@casl/ability": "^6.7.3",
+    "@prisma/client": "6.10.1",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.175",
     "nitropack": "^2.11.12",
     "prisma": "^6.10.1"
   },
