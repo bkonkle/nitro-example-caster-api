@@ -1,7 +1,7 @@
-import { DomainError } from "../errors";
+import { DomainError } from "../../errors";
 
-export class MissingProfileError extends DomainError {
-  name = "MissingProfileError";
+export class BadRequestError extends DomainError {
+  name = "BadRequestError";
 }
 
 export class ForbiddenError extends DomainError {
@@ -12,6 +12,6 @@ export class NotFoundError extends DomainError {
   name = "NotFoundError";
 
   constructor(id: string) {
-    super(`Show with id ${id} not found`);
+    super(`Episode with id ${id} not found`);
   }
 }

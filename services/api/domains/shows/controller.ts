@@ -2,7 +2,6 @@ import { fromOrderByInput } from "@caster/responses/prisma";
 import type { RolesService } from "@caster/roles";
 import type { AppAbility } from "@caster/auth/authorization";
 import { subject } from "@casl/ability";
-import type { Show } from "@prisma/client";
 
 import type { UserWithProfile } from "../users/model";
 import type {
@@ -15,11 +14,8 @@ import type {
 } from "./model";
 import type { ShowsService } from "./service";
 import { Admin } from "./roles";
-import {
-  ForbiddenError,
-  MissingProfileError,
-  ShowNotFoundError,
-} from "./errors";
+import { ForbiddenError, MissingProfileError, NotFoundError } from "./errors";
+import { fromCreateInput, fromShowModel } from "./utils";
 
 export class ShowsController {
   constructor(
@@ -105,30 +101,9 @@ export class ShowsController {
   private getExisting = async (id: string) => {
     const existing = await this.service.get(id);
     if (!existing) {
-      throw new ShowNotFoundError(id);
+      throw new NotFoundError(id);
     }
 
     return existing;
-  };
-}
-
-function fromCreateInput(input: CreateInput): Show {
-  return {
-    ...input,
-    id: null,
-    createdAt: null,
-    updatedAt: null,
-    summary: input.summary || null,
-    picture: input.picture || null,
-    content: input.content || null,
-  };
-}
-
-function fromShowModel(show: ShowModel): Show {
-  return {
-    ...show,
-    summary: show.summary || null,
-    picture: show.picture || null,
-    content: show.content || null,
   };
 }
