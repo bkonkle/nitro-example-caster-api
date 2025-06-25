@@ -1,9 +1,9 @@
 import { fromOrderByInput } from "@caster/responses/prisma";
 import type { RolesService } from "@caster/roles";
-import type { AppAbility } from "@caster/auth/authorization";
 import { subject } from "@casl/ability";
 
 import type { UserWithProfile } from "../users/model";
+import { ForbiddenError, NotFoundError } from "../errors";
 import type {
   ShowCondition,
   Show as ShowModel,
@@ -14,7 +14,7 @@ import type {
 } from "./model";
 import type { ShowsService } from "./service";
 import { Admin } from "./roles";
-import { ForbiddenError, MissingProfileError, NotFoundError } from "./errors";
+import { MissingProfileError } from "./errors";
 import { fromCreateInput, fromShowModel } from "./utils";
 
 export class ShowsController {
@@ -51,7 +51,7 @@ export class ShowsController {
     ability: AppAbility
   ): Promise<{ show?: ShowModel }> {
     if (!user.profile?.id) {
-      throw new MissingProfileError("User object did not come with a Profile");
+      throw new MissingProfileError();
     }
 
     if (ability.cannot("create", subject("Show", fromCreateInput(input)))) {
@@ -86,7 +86,7 @@ export class ShowsController {
     return { show };
   }
 
-  async deleteShow(id: string, ability: AppAbility): Promise<boolean> {
+  async delete(id: string, ability: AppAbility): Promise<boolean> {
     const existing = await this.getExisting(id);
 
     if (ability.cannot("delete", subject("Show", fromShowModel(existing)))) {
@@ -101,7 +101,7 @@ export class ShowsController {
   private getExisting = async (id: string) => {
     const existing = await this.service.get(id);
     if (!existing) {
-      throw new NotFoundError(id);
+      throw new NotFoundError("Show", id);
     }
 
     return existing;

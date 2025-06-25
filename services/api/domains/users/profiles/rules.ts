@@ -1,15 +1,11 @@
-import {
-  type RuleBuilder,
-  type RuleEnhancer,
-  Action,
-} from "@caster/auth/authorization";
+import type { AbilityBuilder } from "@casl/ability";
 
 import type { UserWithProfile } from "../model";
 
 export class ProfileRules implements RuleEnhancer {
   async forUser(
     user: UserWithProfile | undefined,
-    { can, cannot }: RuleBuilder
+    { can, cannot }: AbilityBuilder<AppAbility>
   ) {
     // Anonymous
     can(Action.Read, "Profile");

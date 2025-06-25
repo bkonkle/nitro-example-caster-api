@@ -7,18 +7,14 @@ import type {
   Message,
 } from "@prisma/client";
 import { type PureAbility, AbilityBuilder } from "@casl/ability";
-import type { PermittedFieldsOptions } from "@casl/ability/extra";
 import {
   type PrismaQuery,
   type Subjects,
   createPrismaAbility,
 } from "@casl/prisma";
+import type { PermittedFieldsOptions } from "@casl/ability/extra";
 
-import type { JwtContext, JwtRequest } from "./authentication";
-
-/**
- * Abilities for the App, based on Prisma Entities
- */
+import type { UserWithProfile } from "../../domains/users/model";
 
 export const Action = {
   Create: "create",
@@ -39,18 +35,17 @@ export type AppSubjects = Subjects<{
 }>;
 
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
+
 export const appAbility = new AbilityBuilder<AppAbility>(createPrismaAbility);
 
 /**
  * Rule Enhancers (used to add Casl ability rules to the AppAbility)
  */
 
-export type RuleBuilder = Pick<AbilityBuilder<AppAbility>, "can" | "cannot">;
-
 export interface RuleEnhancer {
   forUser(
     user: (User & { profile: Profile | null }) | undefined,
-    builder: RuleBuilder
+    builder: AbilityBuilder<AppAbility>
   ): Promise<void>;
 }
 
@@ -58,8 +53,8 @@ export interface RuleEnhancer {
  * Custom JWT Request and Context objects with the metadata added to the Request.
  */
 
-export interface AuthRequest<User> extends JwtRequest {
-  user?: User;
+export interface AuthRequest extends JwtRequest {
+  user?: UserWithProfile;
   ability?: AppAbility;
   censor?: <T extends AppSubjects>(
     subject: T,
@@ -68,17 +63,11 @@ export interface AuthRequest<User> extends JwtRequest {
   ) => T;
 }
 
-export interface AuthContext<User> extends JwtContext {
-  req: AuthRequest<User>;
+export interface AuthContext extends JwtContext {
+  req: AuthRequest;
 }
 
 /**
  * Limits the returned object to the permittedFieldsOf the subject based on the ability
  */
-export type CensorFields<User> = NonNullable<AuthRequest<User>["censor"]>;
-
-/**
- * Set metadata indicating that this route should be public.
- */
-export const ALLOW_ANONYMOUS = "auth:allow-anonymous";
-export type AllowAnonymousMetadata = boolean;
+export type CensorFields = NonNullable<AuthRequest["censor"]>;

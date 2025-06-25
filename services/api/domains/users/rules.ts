@@ -1,13 +1,12 @@
-import {
-  type RuleBuilder,
-  type RuleEnhancer,
-  Action,
-} from "@caster/auth/authorization";
+import type { AbilityBuilder } from "@casl/ability";
 
 import type { UserWithProfile } from "./model";
 
 export class UserRules implements RuleEnhancer {
-  async forUser(user: UserWithProfile | undefined, { can }: RuleBuilder) {
+  async forUser(
+    user: UserWithProfile | undefined,
+    { can }: AbilityBuilder<AppAbility>
+  ) {
     if (user) {
       // Same username
       can(Action.Create, "User", { username: user.username });

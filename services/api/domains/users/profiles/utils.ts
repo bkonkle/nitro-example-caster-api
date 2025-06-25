@@ -1,6 +1,5 @@
 import { Prisma, type Profile, type User } from "@prisma/client";
 import type { PermittedFieldsOptions } from "@casl/ability/extra";
-import type { AppAbility } from "@caster/auth/authorization";
 
 import type { CreateInput } from "./model";
 

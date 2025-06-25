@@ -1,7 +1,7 @@
 import { fromOrderByInput } from "@caster/responses/prisma";
-import type { AppAbility } from "@caster/auth/authorization";
 
 import type { UserWithProfile } from "../../users/model";
+import { BadRequestError, ForbiddenError, NotFoundError } from "../../errors";
 import type {
   CreateInput,
   EpisodeCondition,
@@ -11,7 +11,6 @@ import type {
   UpdateInput,
 } from "./model";
 import type { EpisodesService } from "./service";
-import { BadRequestError, ForbiddenError, NotFoundError } from "./errors";
 import { subject } from "@casl/ability";
 import { fromCreateInput } from "./utils";
 
@@ -95,7 +94,7 @@ export class EpisodesResolver {
   private getExisting = async (id: string) => {
     const existing = await this.service.get(id);
     if (!existing) {
-      throw new NotFoundError(id);
+      throw new NotFoundError("Episode", id);
     }
 
     return existing;

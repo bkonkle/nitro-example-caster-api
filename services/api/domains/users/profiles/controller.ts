@@ -1,8 +1,6 @@
-import type { AppAbility, CensorFields } from "@caster/auth/authorization";
 import { fromOrderByInput } from "@caster/responses/prisma";
 import { subject } from "@casl/ability";
 
-import type { User } from "../model";
 import type {
   CreateInput,
   ProfileCondition,
@@ -13,14 +11,14 @@ import type {
 } from "./model";
 import type { ProfilesService } from "./service";
 import { fieldOptions, fromCreateInput } from "./utils";
-import { ForbiddenError, NotFoundError } from "./errors";
+import { ForbiddenError, NotFoundError } from "../../errors";
 
 export class ProfilesController {
   constructor(private readonly service: ProfilesService) {}
 
   async getProfile(
     id: string,
-    censor: CensorFields<User>
+    censor: CensorFields
   ): Promise<ProfileModel | undefined> {
     const profile = await this.service.get(id);
 
@@ -32,7 +30,7 @@ export class ProfilesController {
   }
 
   async getManyProfiles(
-    censor: CensorFields<User>,
+    censor: CensorFields,
     where?: ProfileCondition,
     orderBy?: ProfilesOrderBy[],
     pageSize?: number,
@@ -96,7 +94,7 @@ export class ProfilesController {
   private getExisting = async (id: string) => {
     const existing = await this.service.get(id);
     if (!existing) {
-      throw new NotFoundError(id);
+      throw new NotFoundError("Profile", id);
     }
 
     return existing;

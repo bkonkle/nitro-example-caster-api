@@ -2,16 +2,8 @@ import { DomainError } from "../errors";
 
 export class MissingProfileError extends DomainError {
   name = "MissingProfileError";
-}
 
-export class ForbiddenError extends DomainError {
-  name = "ForbiddenError";
-}
-
-export class NotFoundError extends DomainError {
-  name = "NotFoundError";
-
-  constructor(id: string) {
-    super(`Show with id ${id} not found`);
+  constructor() {
+    super("User object did not come with a Profile");
   }
 }
