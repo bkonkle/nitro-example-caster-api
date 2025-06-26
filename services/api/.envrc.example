@@ -1,6 +1,12 @@
+export NODE_ENV=development
+
 export DATABASE_HOSTNAME=localhost
 export DATABASE_USERNAME=caster
 export DATABASE_PASSWORD=caster
 export DATABASE_NAME=caster
 export DATABASE_PORT=1701
 export DATABASE_URL=postgresql://caster:caster@localhost:1701/caster
+
+export AUTH_SECRET=your-32-char-secret-key-goes-here
+export AUTH_URL=https://your-domain.us.auth0.com
+export AUTH_AUDIENCE=localhost

@@ -2,7 +2,7 @@ import type { Prisma } from "@prisma/client";
 
 import type { User } from "../model";
 
-export class Profile {
+export type Profile = {
   id: string;
   email?: string | null; // Nullable because this field may be censored for unauthorized users
   displayName?: string | null;
@@ -14,33 +14,33 @@ export class Profile {
   user?: User | null;
   createdAt: Date;
   updatedAt: Date;
-}
+};
 
-export class CreateInput {
+export type CreateInput = {
   email: string;
   displayName?: string;
   picture?: string;
   content?: Prisma.JsonValue;
   userId: string;
-}
+};
 
-export class UpdateInput {
+export type UpdateInput = {
   email?: string;
   displayName?: string;
   picture?: string;
   content?: Prisma.JsonValue;
   userId?: string;
-}
+};
 
-export class ProfilesPage {
-  data!: Profile[];
-  count!: number;
-  total!: number;
-  page!: number;
-  pageCount!: number;
-}
+export type ProfilesPage = {
+  data: Profile[];
+  count: number;
+  total: number;
+  page: number;
+  pageCount: number;
+};
 
-export class ProfileCondition {
+export type ProfileCondition = {
   id?: string;
   email?: string;
   displayName?: string;
@@ -48,7 +48,7 @@ export class ProfileCondition {
   userId?: string;
   createdAt?: Date;
   updatedAt?: Date;
-}
+};
 
 export const ProfilesOrdering = {
   IdAsc: "ID_ASC",

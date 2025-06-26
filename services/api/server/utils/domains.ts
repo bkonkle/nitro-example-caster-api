@@ -4,21 +4,23 @@ import { ShowsController } from "../../domains/shows/controller";
 import { ShowsService } from "../../domains/shows/service";
 import { ShowRoles } from "../../domains/shows/roles";
 import { EpisodeRoles } from "../../domains/shows/episodes/roles";
+import { UsersController } from "../../domains/users/controller";
+import { UsersService } from "../../domains/users/service";
 
 declare global {
   var domains: Domains | undefined | null;
 }
 
 export type Domains = {
-  shows: ShowsController;
+  users: UsersController;
   roles: RolesService;
+  shows: ShowsController;
 };
 
 export function useDomains(): Domains {
   if (!global.domains) {
-    const prisma = usePrisma();
-
-    const service = new ShowsService(prisma);
+    const usersService = new UsersService(prisma);
+    const showsService = new ShowsService(prisma);
 
     const roles = new RolesService(
       prisma,
@@ -26,9 +28,10 @@ export function useDomains(): Domains {
       [...ShowRoles.roles, ...EpisodeRoles.roles]
     );
 
-    const shows = new ShowsController(service, roles);
+    const users = new UsersController(usersService);
+    const shows = new ShowsController(showsService, roles);
 
-    global.domains = { shows, roles };
+    global.domains = { users, roles, shows };
   }
 
   return global.domains;

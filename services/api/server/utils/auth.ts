@@ -15,6 +15,7 @@ import {
 import type { PermittedFieldsOptions } from "@casl/ability/extra";
 
 import type { UserWithProfile } from "../../domains/users/model";
+import { createRemoteJWKSet } from "jose";
 
 export const Action = {
   Create: "create",
@@ -39,19 +40,26 @@ export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 export const appAbility = new AbilityBuilder<AppAbility>(createPrismaAbility);
 
 /**
- * Rule Enhancers (used to add Casl ability rules to the AppAbility)
- */
-
-export interface RuleEnhancer {
-  forUser(
-    user: (User & { profile: Profile | null }) | undefined,
-    builder: AbilityBuilder<AppAbility>
-  ): Promise<void>;
-}
-
-/**
  * Custom JWT Request and Context objects with the metadata added to the Request.
  */
+
+export interface JWT {
+  jti: string; // JWT id
+  iss?: string; // issuer
+  aud?: string | string[]; // audience
+  sub?: string; // subject
+  iat?: number; // issued at
+  exp?: number; // expires in
+  nbf?: number; // not before
+}
+
+export interface JwtRequest extends Request {
+  jwt?: JWT;
+}
+
+export interface JwtContext {
+  req: JwtRequest;
+}
 
 export interface AuthRequest extends JwtRequest {
   user?: UserWithProfile;
@@ -71,3 +79,10 @@ export interface AuthContext extends JwtContext {
  * Limits the returned object to the permittedFieldsOf the subject based on the ability
  */
 export type CensorFields = NonNullable<AuthRequest["censor"]>;
+
+/**
+ * JWT Configuration
+ */
+export const jwks = createRemoteJWKSet(
+  new URL(`${config.get("auth.url")}/.well-known/jwks.json`)
+);

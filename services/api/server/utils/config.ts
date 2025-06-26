@@ -29,10 +29,7 @@ export interface Config {
   auth: {
     url: string;
     audience: string;
-    client: {
-      id: string | null;
-      secret: string | null;
-    };
+    secret: string | null;
   };
 }
 
@@ -128,33 +125,27 @@ export const configSchema: convict.Schema<Config> = {
 
   auth: {
     url: {
-      doc: "OAuth2 url",
+      doc: "OAuth url",
       format: String,
       default: "https://my-domain.us.auth0.com",
-      env: "OAUTH2_URL",
+      env: "AUTH_URL",
     },
     audience: {
-      doc: "OAuth2 audience",
+      doc: "OAuth audience",
       format: String,
       default: "localhost",
-      env: "OAUTH2_AUDIENCE",
+      env: "AUTH_AUDIENCE",
     },
-    client: {
-      id: {
-        doc: "OAuth2 client id",
-        format: String,
-        default: null,
-        env: "OAUTH2_CLIENT_ID",
-      },
-      secret: {
-        doc: "OAuth2 client secret",
-        format: String,
-        default: null,
-        env: "OAUTH2_CLIENT_SECRET",
-        sensitive: true,
-      },
+    secret: {
+      doc: "Session secret",
+      format: String,
+      default: null,
+      env: "AUTH_SECRET",
+      sensitive: true,
     },
   },
 };
 
-export const defaultConfig = convict(configSchema);
+export const config = convict(configSchema);
+
+export default config;

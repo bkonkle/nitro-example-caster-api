@@ -2,43 +2,43 @@ import type { Prisma } from "@prisma/client";
 
 import type { Show } from "../model";
 
-export class Episode {
-  id!: string;
-  title!: string;
+export type Episode = {
+  id: string;
+  title: string;
   summary?: string | null;
   picture?: string | null;
   content?: Prisma.JsonValue;
   showId?: string | null;
   show?: Show | null;
-  createdAt!: Date;
-  updatedAt!: Date;
-}
+  createdAt: Date;
+  updatedAt: Date;
+};
 
-export class CreateInput {
-  title!: string;
+export type CreateInput = {
+  title: string;
   summary?: string;
   picture?: string;
   content?: Prisma.JsonValue;
-  showId!: string;
-}
+  showId: string;
+};
 
-export class UpdateInput {
+export type UpdateInput = {
   title?: string;
   summary?: string;
   picture?: string;
   content?: Prisma.JsonValue;
   showId?: string;
-}
+};
 
-export class EpisodesPage {
-  data!: Episode[];
-  count!: number;
-  total!: number;
-  page!: number;
-  pageCount!: number;
-}
+export type EpisodesPage = {
+  data: Episode[];
+  count: number;
+  total: number;
+  page: number;
+  pageCount: number;
+};
 
-export class EpisodeCondition {
+export type EpisodeCondition = {
   id?: string;
   title?: string;
   summary?: string;
@@ -46,7 +46,7 @@ export class EpisodeCondition {
   showId?: string;
   createdAt?: Date;
   updatedAt?: Date;
-}
+};
 
 export const EpisodesOrdering = {
   IdAsc: "ID_ASC",

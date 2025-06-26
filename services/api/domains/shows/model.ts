@@ -1,6 +1,6 @@
 import type { Prisma } from "@prisma/client";
 
-export class Show {
+export type Show = {
   id: string;
   title: string;
   summary?: string;
@@ -8,24 +8,24 @@ export class Show {
   content?: Prisma.JsonValue;
   createdAt: Date;
   updatedAt: Date;
-}
+};
 
-export class ShowsPage {
+export type ShowsPage = {
   data: Show[];
   count: number;
   total: number;
   page: number;
   pageCount: number;
-}
+};
 
-export class ShowCondition {
+export type ShowCondition = {
   id?: string;
   title?: string;
   summary?: string;
   picture?: string;
   createdAt?: Date;
   updatedAt?: Date;
-}
+};
 
 export const ShowsOrdering = {
   IdAsc: "ID_ASC",
@@ -42,16 +42,16 @@ export const ShowsOrdering = {
 
 export type ShowsOrderBy = (typeof ShowsOrdering)[keyof typeof ShowsOrdering];
 
-export class CreateInput {
+export type CreateInput = {
   title: string;
   summary?: string;
   picture?: string;
   content?: Prisma.JsonValue;
-}
+};
 
-export class UpdateInput {
+export type UpdateInput = {
   title?: string;
   summary?: string;
   picture?: string;
   content?: Prisma.JsonValue;
-}
+};

@@ -6,30 +6,30 @@ import type {
 
 import type { Profile } from "./profiles/model";
 
-export class User {
-  id!: string;
-  username!: string;
-  isActive!: boolean;
+export type User = {
+  id: string;
+  username: string;
+  isActive: boolean;
   profileId?: string | null;
   profile?: Profile | null;
-  createdAt!: Date;
-  updatedAt!: Date;
-}
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 export type UserWithProfile = PrismaUser & { profile: PrismaProfile | null };
 
-export class CreateProfileInput {
-  email!: string;
+export type CreateProfileInput = {
+  email: string;
   displayName?: string;
   picture?: string;
   content?: Prisma.JsonValue;
-}
+};
 
-export class CreateInput {
+export type CreateInput = {
   profile?: CreateProfileInput;
-}
+};
 
-export class UpdateInput {
+export type UpdateInput = {
   username?: string;
   isActive?: boolean;
-}
+};
