@@ -1,13 +1,20 @@
+import pick from "lodash/pick";
 import { jwtVerify } from "jose";
+import {
+  permittedFieldsOf,
+  type PermittedFieldsOptions,
+} from "@casl/ability/extra";
 
+import type { Action } from "../utils/auth";
 import type { UserWithProfile } from "../../domains/users/model";
+import type { UsersController } from "../../domains/users/controller";
 import { withUserRules } from "../../domains/users/rules";
 import { withProfileRules } from "../../domains/users/profiles/rules";
 import { withShowRules } from "../../domains/shows/rules";
 import { withEpisodeRules } from "../../domains/shows/episodes/rules";
 
 export default defineEventHandler(async (event) => {
-  const domains = useDomains();
+  const { roles, users } = domains;
 
   const session = await useSession(event, {
     password: config.get("auth.secret"),
@@ -20,18 +27,30 @@ export default defineEventHandler(async (event) => {
 
   let user: UserWithProfile | undefined = session.data?.user;
   if (!user) {
-    user = await getUser();
+    user = await getUser(users);
 
     await session.update({ user });
   }
 
-  await withUserRules(appAbility, user);
-  await withProfileRules(appAbility, user);
-  await withShowRules(appAbility, domains.roles, user);
-  await withEpisodeRules(appAbility, domains.roles, user);
+  await withUserRules(abilityBuilder, user);
+  await withProfileRules(abilityBuilder, user);
+  await withShowRules(abilityBuilder, roles, user);
+  await withEpisodeRules(abilityBuilder, roles, user);
+
+  const ability = abilityBuilder.build();
 
   event.context.user = user;
-  event.context.ability = appAbility;
+  event.context.ability = ability;
+
+  event.context.censor = <T extends AppSubjects>(
+    subject: AppSubjects,
+    fieldOptions: PermittedFieldsOptions<AppAbility>,
+    action: Action = "read"
+  ): T => {
+    const fields = permittedFieldsOf(ability, action, subject, fieldOptions);
+
+    return pick(subject, fields) as T;
+  };
 });
 
 function resolveAuthorizationHeader(headers?: Headers): string | undefined {
@@ -54,6 +73,7 @@ function resolveAuthorizationHeader(headers?: Headers): string | undefined {
 }
 
 async function getUser(
+  users: UsersController,
   headers?: Headers
 ): Promise<UserWithProfile | undefined> {
   const token = resolveAuthorizationHeader(headers);
@@ -71,16 +91,13 @@ async function getUser(
 
     const username = jwt?.payload.sub;
     if (username) {
-      const result = await domains.users.getOrCreateCurrentUser(
-        {
-          profile: {
-            email: json.email,
-            displayName: json.nickname,
-            picture: json.picture,
-          },
+      const result = await users.getOrCreateUser(username, {
+        profile: {
+          email: json.email,
+          displayName: json.nickname,
+          picture: json.picture,
         },
-        username
-      );
+      });
 
       return result?.user as UserWithProfile | undefined;
     }

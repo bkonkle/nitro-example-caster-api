@@ -1,10 +1,13 @@
-import type { ShowCondition, ShowsOrderBy } from "../../../domains/shows/model";
+import type {
+  EpisodeCondition,
+  EpisodesOrderBy,
+} from "../../../domains/shows/episodes/model";
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
 
-  const where = getWhereInput<ShowCondition>(query);
-  const orderBy = getOrderByInput<ShowsOrderBy>(query);
+  const where = getWhereInput<EpisodeCondition>(query);
+  const orderBy = getOrderByInput<EpisodesOrderBy>(query);
   const { page, pageSize } = getPageInput(query);
 
   // Transform date inputs

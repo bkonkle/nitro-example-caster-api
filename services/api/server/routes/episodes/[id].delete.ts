@@ -2,10 +2,10 @@ import { ForbiddenError, NotFoundError } from "../../../domains/errors";
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
-  const { shows } = domains;
+  const { episodes } = domains;
 
   try {
-    const result = await shows.delete(id, event.context.ability);
+    const result = await episodes.delete(id, event.context.ability);
 
     return { sucess: result };
   } catch (error: unknown) {

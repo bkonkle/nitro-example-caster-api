@@ -1,18 +1,17 @@
-import type { CreateInput, UpdateInput, User } from "./model";
+import type { CreateInput, UpdateInput } from "./model";
 import type { UsersService } from "./service";
 
 export class UsersController {
   constructor(private readonly service: UsersService) {}
 
-  async getCurrentUser(_username: string, user?: User) {
+  async getUserByUsername(username: string) {
+    const user = await this.service.getByUsername(username);
+
     return user;
   }
 
-  async getOrCreateCurrentUser(
-    input: CreateInput,
-    username: string,
-    existing?: User
-  ) {
+  async getOrCreateUser(username: string, input: CreateInput) {
+    const existing = await this.service.getByUsername(username);
     if (existing) {
       return { user: existing };
     }
@@ -22,8 +21,8 @@ export class UsersController {
     return { user };
   }
 
-  async updateCurrentUser(input: UpdateInput, existing: User) {
-    const user = await this.service.update(existing.id, input);
+  async updateUser(id: string, input: UpdateInput) {
+    const user = await this.service.update(id, input);
 
     return { user };
   }

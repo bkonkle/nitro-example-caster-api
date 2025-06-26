@@ -14,10 +14,10 @@ import type { EpisodesService } from "./service";
 import { subject } from "@casl/ability";
 import { fromCreateInput } from "./utils";
 
-export class EpisodesResolver {
+export class EpisodesController {
   constructor(private readonly service: EpisodesService) {}
 
-  async getEpisode(id: string): Promise<EpisodeModel | undefined> {
+  async get(id: string): Promise<EpisodeModel | undefined> {
     const episode = await this.service.get(id);
 
     if (episode) {
@@ -39,7 +39,7 @@ export class EpisodesResolver {
     });
   }
 
-  async createEpisode(
+  async create(
     input: CreateInput,
     user: UserWithProfile,
     ability: AppAbility
@@ -59,7 +59,7 @@ export class EpisodesResolver {
     return { episode };
   }
 
-  async updateEpisode(
+  async update(
     id: string,
     input: UpdateInput,
     ability: AppAbility
@@ -77,7 +77,7 @@ export class EpisodesResolver {
     return { episode };
   }
 
-  async deleteEpisode(id: string, ability: AppAbility): Promise<boolean> {
+  async delete(id: string, ability: AppAbility): Promise<boolean> {
     const existing = await this.getExisting(id);
 
     if (ability.cannot("delete", subject("Episode", existing))) {

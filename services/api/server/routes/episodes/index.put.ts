@@ -3,14 +3,14 @@ import { z } from "zod/v4";
 import { ForbiddenError } from "../../../domains/errors";
 
 const Input = z.object({
-  title: z.string().optional(),
+  title: z.string(),
   summary: z.string().optional(),
   picture: z.string().optional(),
   content: z.json().optional(),
+  showId: z.string(),
 });
 
 export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, "id");
   const body = await readBody(event);
 
   const inputResult = await Input.safeParseAsync(body);
@@ -24,19 +24,14 @@ export default defineEventHandler(async (event) => {
 
   const input = inputResult.data;
 
-  const { shows } = domains;
-
-  const show = await shows.get(id);
-  if (!show) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: "Show not found",
-      message: `Show with ID ${id} not found`,
-    });
-  }
+  const { episodes } = domains;
 
   try {
-    const result = await shows.update(id, input, event.context.ability);
+    const result = await episodes.create(
+      input,
+      event.context.user,
+      event.context.ability
+    );
 
     return result;
   } catch (error: unknown) {

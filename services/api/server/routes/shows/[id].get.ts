@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
-  const { shows } = useDomains();
+  const { shows } = domains;
 
   const show = await shows.get(id);
   if (!show) {

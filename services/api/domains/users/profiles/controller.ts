@@ -16,7 +16,7 @@ import { ForbiddenError, NotFoundError } from "../../errors";
 export class ProfilesController {
   constructor(private readonly service: ProfilesService) {}
 
-  async getProfile(
+  async get(
     id: string,
     censor: CensorFields
   ): Promise<ProfileModel | undefined> {
@@ -29,7 +29,7 @@ export class ProfilesController {
     }
   }
 
-  async getManyProfiles(
+  async list(
     censor: CensorFields,
     where?: ProfileCondition,
     orderBy?: ProfilesOrderBy[],
@@ -50,7 +50,7 @@ export class ProfilesController {
     return { ...rest, data: permitted };
   }
 
-  async createProfile(
+  async create(
     input: CreateInput,
     ability: AppAbility
   ): Promise<{ profile?: ProfileModel }> {
@@ -63,7 +63,7 @@ export class ProfilesController {
     return { profile };
   }
 
-  async updateProfile(
+  async update(
     id: string,
     input: UpdateInput,
     ability: AppAbility
@@ -79,7 +79,7 @@ export class ProfilesController {
     return { profile };
   }
 
-  async deleteProfile(id: string, ability: AppAbility): Promise<boolean> {
+  async delete(id: string, ability: AppAbility): Promise<boolean> {
     const existing = await this.getExisting(id);
 
     if (ability.cannot("delete", subject("Profile", existing))) {

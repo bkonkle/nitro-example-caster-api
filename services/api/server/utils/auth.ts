@@ -1,3 +1,4 @@
+import { createRemoteJWKSet } from "jose";
 import type {
   User,
   Profile,
@@ -15,7 +16,6 @@ import {
 import type { PermittedFieldsOptions } from "@casl/ability/extra";
 
 import type { UserWithProfile } from "../../domains/users/model";
-import { createRemoteJWKSet } from "jose";
 
 export const Action = {
   Create: "create",
@@ -37,7 +37,9 @@ export type AppSubjects = Subjects<{
 
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
-export const appAbility = new AbilityBuilder<AppAbility>(createPrismaAbility);
+export const abilityBuilder = new AbilityBuilder<AppAbility>(
+  createPrismaAbility
+);
 
 /**
  * Custom JWT Request and Context objects with the metadata added to the Request.

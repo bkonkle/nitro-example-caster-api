@@ -7,6 +7,7 @@ const Input = z.object({
   summary: z.string().optional(),
   picture: z.string().optional(),
   content: z.json().optional(),
+  showId: z.string().optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -24,19 +25,19 @@ export default defineEventHandler(async (event) => {
 
   const input = inputResult.data;
 
-  const { shows } = domains;
+  const { episodes } = domains;
 
-  const show = await shows.get(id);
-  if (!show) {
+  const episode = await episodes.get(id);
+  if (!episode) {
     throw createError({
       statusCode: 404,
-      statusMessage: "Show not found",
-      message: `Show with ID ${id} not found`,
+      statusMessage: "Episode not found",
+      message: `Episode with ID ${id} not found`,
     });
   }
 
   try {
-    const result = await shows.update(id, input, event.context.ability);
+    const result = await episodes.update(id, input, event.context.ability);
 
     return result;
   } catch (error: unknown) {

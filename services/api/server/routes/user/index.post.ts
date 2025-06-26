@@ -3,14 +3,19 @@ import { z } from "zod/v4";
 import { ForbiddenError } from "../../../domains/errors";
 
 const Input = z.object({
-  title: z.string().optional(),
-  summary: z.string().optional(),
-  picture: z.string().optional(),
-  content: z.json().optional(),
+  username: z.string().optional(),
+  isActive: z.boolean().optional(),
 });
 
 export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, "id");
+  if (!event.context.user) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "Unauthorized",
+      message: "You must be logged in to update your User.",
+    });
+  }
+
   const body = await readBody(event);
 
   const inputResult = await Input.safeParseAsync(body);
@@ -24,19 +29,10 @@ export default defineEventHandler(async (event) => {
 
   const input = inputResult.data;
 
-  const { shows } = domains;
-
-  const show = await shows.get(id);
-  if (!show) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: "Show not found",
-      message: `Show with ID ${id} not found`,
-    });
-  }
+  const { users } = domains;
 
   try {
-    const result = await shows.update(id, input, event.context.ability);
+    const result = await users.updateUser(event.context.user.id, input);
 
     return result;
   } catch (error: unknown) {

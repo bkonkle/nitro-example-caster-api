@@ -2,7 +2,7 @@ import type { AbilityBuilder } from "@casl/ability";
 
 import type { UserWithProfile } from "../model";
 
-export function withProfileRules(
+export async function withProfileRules(
   { can, cannot }: AbilityBuilder<AppAbility>,
   user?: UserWithProfile
 ) {

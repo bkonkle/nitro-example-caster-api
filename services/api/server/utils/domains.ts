@@ -1,38 +1,42 @@
 import { RolesService } from "@caster/roles";
 
-import { ShowsController } from "../../domains/shows/controller";
-import { ShowsService } from "../../domains/shows/service";
-import { ShowRoles } from "../../domains/shows/roles";
-import { EpisodeRoles } from "../../domains/shows/episodes/roles";
 import { UsersController } from "../../domains/users/controller";
 import { UsersService } from "../../domains/users/service";
-
-declare global {
-  var domains: Domains | undefined | null;
-}
+import { ProfilesController } from "../../domains/users/profiles/controller";
+import { ProfilesService } from "../../domains/users/profiles/service";
+import { ShowRoles } from "../../domains/shows/roles";
+import { ShowsController } from "../../domains/shows/controller";
+import { ShowsService } from "../../domains/shows/service";
+import { EpisodeRoles } from "../../domains/shows/episodes/roles";
+import { EpisodesController } from "../../domains/shows/episodes/controller";
+import { EpisodesService } from "../../domains/shows/episodes/service";
 
 export type Domains = {
   users: UsersController;
+  profiles: ProfilesController;
   roles: RolesService;
   shows: ShowsController;
+  episodes: EpisodesController;
 };
 
-export function useDomains(): Domains {
-  if (!global.domains) {
-    const usersService = new UsersService(prisma);
-    const showsService = new ShowsService(prisma);
+export function getDomains(): Domains {
+  const usersService = new UsersService(prisma);
+  const profilesService = new ProfilesService(prisma);
+  const showsService = new ShowsService(prisma);
+  const episodesService = new EpisodesService(prisma);
 
-    const roles = new RolesService(
-      prisma,
-      [...ShowRoles.permissions, ...EpisodeRoles.permissions],
-      [...ShowRoles.roles, ...EpisodeRoles.roles]
-    );
+  const roles = new RolesService(
+    prisma,
+    [...ShowRoles.permissions, ...EpisodeRoles.permissions],
+    [...ShowRoles.roles, ...EpisodeRoles.roles]
+  );
 
-    const users = new UsersController(usersService);
-    const shows = new ShowsController(showsService, roles);
+  const users = new UsersController(usersService);
+  const profiles = new ProfilesController(profilesService);
+  const shows = new ShowsController(showsService, roles);
+  const episodes = new EpisodesController(episodesService);
 
-    global.domains = { users, roles, shows };
-  }
-
-  return global.domains;
+  return { users, profiles, roles, shows, episodes };
 }
+
+export const domains = getDomains();
