@@ -3,11 +3,11 @@ import { z } from "zod/v4";
 import { ForbiddenError } from "../../../domains/errors";
 
 const Input = z.object({
-  title: z.string(),
-  summary: z.string().optional(),
+  email: z.email(),
+  displayName: z.string().optional(),
   picture: z.string().optional(),
   content: z.json().optional(),
-  showId: z.string(),
+  userId: z.string(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -24,14 +24,10 @@ export default defineEventHandler(async (event) => {
 
   const input = inputResult.data;
 
-  const { episodes } = domains;
+  const { profiles } = domains;
 
   try {
-    const result = await episodes.create(
-      input,
-      event.context.user,
-      event.context.ability
-    );
+    const result = await profiles.create(input, event.context.ability);
 
     return result;
   } catch (error: unknown) {

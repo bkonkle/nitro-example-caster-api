@@ -3,11 +3,11 @@ import { z } from "zod/v4";
 import { ForbiddenError } from "../../../domains/errors";
 
 const Input = z.object({
-  title: z.string().optional(),
-  summary: z.string().optional(),
+  email: z.email().optional(),
+  displayName: z.string().optional(),
   picture: z.string().optional(),
   content: z.json().optional(),
-  showId: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -25,19 +25,19 @@ export default defineEventHandler(async (event) => {
 
   const input = inputResult.data;
 
-  const { episodes } = domains;
+  const { profiles } = domains;
 
-  const episode = await episodes.get(id);
-  if (!episode) {
+  const profile = await profiles.get(id, event.context.censor);
+  if (!profile) {
     throw createError({
       statusCode: 404,
-      statusMessage: "Episode not found",
-      message: `Episode with ID ${id} not found`,
+      statusMessage: "Profile not found",
+      message: `Profile with ID ${id} not found`,
     });
   }
 
   try {
-    const result = await episodes.update(id, input, event.context.ability);
+    const result = await profiles.update(id, input, event.context.ability);
 
     return result;
   } catch (error: unknown) {

@@ -1,22 +1,28 @@
 import type {
-  EpisodeCondition,
-  EpisodesOrderBy,
-} from "../../../domains/shows/episodes/model";
+  ProfileCondition,
+  ProfilesOrderBy,
+} from "../../../domains/users/profiles/model";
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
 
-  const where = getWhereInput<EpisodeCondition>(query);
-  const orderBy = getOrderByInput<EpisodesOrderBy>(query);
+  const where = getWhereInput<ProfileCondition>(query);
+  const orderBy = getOrderByInput<ProfilesOrderBy>(query);
   const { page, pageSize } = getPageInput(query);
 
   // Transform date inputs
   where.createdAt = parseDateInput("createdAt", where.createdAt);
   where.updatedAt = parseDateInput("updatedAt", where.updatedAt);
 
-  const { shows } = domains;
+  const { profiles } = domains;
 
-  const result = await shows.list(where, orderBy, pageSize, page);
+  const result = await profiles.list(
+    event.context.censor,
+    where,
+    orderBy,
+    pageSize,
+    page
+  );
 
   return result;
 });
