@@ -14,17 +14,7 @@ import {
   createPrismaAbility,
 } from "@casl/prisma";
 import type { PermittedFieldsOptions } from "@casl/ability/extra";
-
-import type { UserWithProfile } from "../../domains/users/model";
-
-export const Action = {
-  Create: "create",
-  Read: "read",
-  Update: "update",
-  Delete: "delete",
-  Manage: "manage",
-} as const;
-export type Action = (typeof Action)[keyof typeof Action];
+import type { Action } from "@caster/roles";
 
 export type AppSubjects = Subjects<{
   User: User;
@@ -42,45 +32,13 @@ export const abilityBuilder = new AbilityBuilder<AppAbility>(
 );
 
 /**
- * Custom JWT Request and Context objects with the metadata added to the Request.
- */
-
-export interface JWT {
-  jti: string; // JWT id
-  iss?: string; // issuer
-  aud?: string | string[]; // audience
-  sub?: string; // subject
-  iat?: number; // issued at
-  exp?: number; // expires in
-  nbf?: number; // not before
-}
-
-export interface JwtRequest extends Request {
-  jwt?: JWT;
-}
-
-export interface JwtContext {
-  req: JwtRequest;
-}
-
-export interface AuthRequest extends JwtRequest {
-  user?: UserWithProfile;
-  ability?: AppAbility;
-  censor?: <T extends AppSubjects>(
-    subject: T,
-    fieldOptions: PermittedFieldsOptions<AppAbility>,
-    action?: Action
-  ) => T;
-}
-
-export interface AuthContext extends JwtContext {
-  req: AuthRequest;
-}
-
-/**
  * Limits the returned object to the permittedFieldsOf the subject based on the ability
  */
-export type CensorFields = NonNullable<AuthRequest["censor"]>;
+export type CensorFields = <T extends AppSubjects>(
+  subject: T,
+  fieldOptions: PermittedFieldsOptions<AppAbility>,
+  action?: Action
+) => T;
 
 /**
  * JWT Configuration
