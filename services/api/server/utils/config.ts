@@ -17,10 +17,6 @@ export interface Config {
     };
   };
 
-  redis: {
-    url: string;
-  };
-
   auth: {
     url: string;
     audience: string;
@@ -74,16 +70,6 @@ export const configSchema: convict.Schema<Config> = {
         env: "DATABASE_POOL_MAX",
         arg: "db-max",
       },
-    },
-  },
-
-  redis: {
-    url: {
-      doc: "Redis url",
-      format: String,
-      default: "localhost:6379",
-      env: "REDIS_URL",
-      arg: "redis-url",
     },
   },
 
