@@ -1,6 +1,4 @@
-import uniqBy from "lodash/uniqBy";
-import groupBy from "lodash/groupBy";
-import mapValues from "lodash/mapValues";
+import { uniqBy, groupBy, mapValues } from "lodash-es";
 import type { Prisma, PrismaClient, RoleGrant } from "@prisma/client";
 
 import type { Role, Permission } from "./roles";
