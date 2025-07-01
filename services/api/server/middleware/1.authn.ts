@@ -17,8 +17,6 @@ export default defineEventHandler(async (event) => {
 
   let user: UserWithProfile | undefined = session.data?.user;
   if (!user) {
-    console.log(">- event.context.headers ->", event.context.headers);
-
     user = await getUser(users, getRequestHeader(event, "authorization"));
 
     await session.update({ user });
@@ -35,8 +33,6 @@ async function getUser(
   if (!token) {
     return;
   }
-
-  console.log(">- token ->", token);
 
   const jwt = await jwtVerify(token, jwks, {
     issuer: `${config.get("auth.url")}/`,

@@ -9,11 +9,6 @@ export interface Config {
   port: number;
 
   db: {
-    host: string;
-    username: string;
-    password: string;
-    name: string;
-    port: number;
     url: string;
     debug: boolean;
     pool: {
@@ -50,37 +45,6 @@ export const configSchema: convict.Schema<Config> = {
   },
 
   db: {
-    host: {
-      doc: "Database host name/IP",
-      format: String,
-      default: "localhost",
-      env: "DATABASE_HOSTNAME",
-    },
-    username: {
-      doc: "Database username",
-      format: String,
-      default: "caster",
-      env: "DATABASE_USERNAME",
-    },
-    password: {
-      doc: "Database password",
-      format: String,
-      default: "caster",
-      env: "DATABASE_PASSWORD",
-      sensitive: true,
-    },
-    name: {
-      doc: "Database name",
-      format: String,
-      default: "caster",
-      env: "DATABASE_NAME",
-    },
-    port: {
-      doc: "Database port",
-      format: "port",
-      default: 1701,
-      env: "DATABASE_PORT",
-    },
     url: {
       doc: "Database url",
       format: String,
