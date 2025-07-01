@@ -17,7 +17,9 @@ export default defineEventHandler(async (event) => {
 
   let user: UserWithProfile | undefined = session.data?.user;
   if (!user) {
-    user = await getUser(users);
+    console.log(">- event.context.headers ->", event.context.headers);
+
+    user = await getUser(users, getRequestHeader(event, "authorization"));
 
     await session.update({ user });
   }
@@ -27,9 +29,9 @@ export default defineEventHandler(async (event) => {
 
 async function getUser(
   users: UsersController,
-  headers?: Headers
+  header?: string
 ): Promise<UserWithProfile | undefined> {
-  const token = resolveAuthorizationHeader(headers);
+  const token = resolveAuthorizationHeader(header);
   if (!token) {
     return;
   }
@@ -64,13 +66,8 @@ async function getUser(
   }
 }
 
-function resolveAuthorizationHeader(headers?: Headers): string | undefined {
-  console.log(">- headers ->", headers);
-  if (!headers || !headers.has("authorization")) {
-    return;
-  }
-
-  const parts = headers.get("authorization")?.trim().split(" ") ?? [];
+function resolveAuthorizationHeader(header?: string): string | undefined {
+  const parts = header?.trim().split(" ") ?? [];
 
   if (parts.length !== 2) {
     return;
