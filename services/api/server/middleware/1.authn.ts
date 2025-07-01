@@ -31,6 +31,10 @@ async function getUser(
 ): Promise<UserWithProfile | undefined> {
   const token = resolveAuthorizationHeader(headers);
 
+  console.log(">- token ->", token);
+
+  console.log(">- jwks ->", jwks);
+
   const jwt = await jwtVerify(token, jwks, {
     issuer: `${config.get("auth.url")}/`,
     audience: config.get("auth.audience"),

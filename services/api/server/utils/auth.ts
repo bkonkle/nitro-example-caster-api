@@ -46,3 +46,5 @@ export type CensorFields = <T extends AppSubjects>(
 export const jwks = createRemoteJWKSet(
   new URL(`${config.get("auth.url")}/.well-known/jwks.json`)
 );
+
+console.log('>- config.get("auth.url") ->', config.get("auth.url"));
