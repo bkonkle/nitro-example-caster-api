@@ -5,8 +5,8 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"],
-      "env": ["CARGO_ZIGBUILD_ZIG_PATH"]
+      "outputs": [".output/**"],
+      "env": []
     },
     "lint": {
       "dependsOn": ["^lint"]
