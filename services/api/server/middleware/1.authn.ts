@@ -30,10 +30,11 @@ async function getUser(
   headers?: Headers
 ): Promise<UserWithProfile | undefined> {
   const token = resolveAuthorizationHeader(headers);
+  if (!token) {
+    return;
+  }
 
   console.log(">- token ->", token);
-
-  console.log(">- jwks ->", jwks);
 
   const jwt = await jwtVerify(token, jwks, {
     issuer: `${config.get("auth.url")}/`,
@@ -64,6 +65,7 @@ async function getUser(
 }
 
 function resolveAuthorizationHeader(headers?: Headers): string | undefined {
+  console.log(">- headers ->", headers);
   if (!headers || !headers.has("authorization")) {
     return;
   }
