@@ -1,4 +1,4 @@
-import type { RolesService } from "@caster/roles";
+import { Actions, type RolesService } from "@caster/roles";
 import type { AbilityBuilder } from "@casl/ability";
 
 import type { UserWithProfile } from "../../users/model";
@@ -10,7 +10,7 @@ export async function withEpisodeRules(
   user?: UserWithProfile
 ) {
   // Anonymous
-  can(Action.Read, "Episode");
+  can(Actions.Read, "Episode");
 
   if (!user) {
     return;
@@ -33,9 +33,9 @@ export async function withEpisodeRules(
     episodePermissions[episodeId].forEach((permission) => {
       switch (permission.key) {
         case Chat.key:
-          return can(Action.Manage, "Message", { episodeId, profileId });
+          return can(Actions.Manage, "Message", { episodeId, profileId });
         case ReadChat.key:
-          return can(Action.Read, "Message", { episodeId });
+          return can(Actions.Read, "Message", { episodeId });
       }
     });
   });

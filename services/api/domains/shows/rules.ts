@@ -1,5 +1,5 @@
 import type { AbilityBuilder } from "@casl/ability";
-import type { RolesService } from "@caster/roles";
+import { Actions, type RolesService } from "@caster/roles";
 
 import type { UserWithProfile } from "../users/model";
 import { Delete, ManageEpisodes, ManageRoles, Update } from "./roles";
@@ -10,14 +10,14 @@ export async function withShowRules(
   user?: UserWithProfile
 ) {
   // Anonymous
-  can(Action.Read, "Show");
+  can(Actions.Read, "Show");
 
   if (!user) {
     return;
   }
 
   // Authenticated
-  can(Action.Create, "Show");
+  can(Actions.Create, "Show");
 
   const profileId = user.profile?.id;
   if (!profileId) {
@@ -32,13 +32,13 @@ export async function withShowRules(
     showPermissions[showId].forEach((permission) => {
       switch (permission.key) {
         case Update.key:
-          return can(Action.Update, "Show", { id: showId });
+          return can(Actions.Update, "Show", { id: showId });
         case Delete.key:
-          return can(Action.Delete, "Show", { id: showId });
+          return can(Actions.Delete, "Show", { id: showId });
         case ManageEpisodes.key:
-          return can(Action.Manage, "Episode", { showId });
+          return can(Actions.Manage, "Episode", { showId });
         case ManageRoles.key:
-          return can(Action.Manage, "RoleGrant", {
+          return can(Actions.Manage, "RoleGrant", {
             subjectTable: "Show",
             subjectId: showId,
           });

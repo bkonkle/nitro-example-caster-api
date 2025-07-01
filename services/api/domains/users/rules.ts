@@ -1,4 +1,5 @@
 import type { AbilityBuilder } from "@casl/ability";
+import { Actions } from "@caster/roles";
 
 import type { UserWithProfile } from "./model";
 
@@ -8,8 +9,8 @@ export async function withUserRules(
 ) {
   if (user) {
     // Same username
-    can(Action.Create, "User", { username: user.username });
-    can(Action.Read, "User", { username: user.username });
-    can(Action.Update, "User", { username: user.username });
+    can(Actions.Create, "User", { username: user.username });
+    can(Actions.Read, "User", { username: user.username });
+    can(Actions.Update, "User", { username: user.username });
   }
 }
