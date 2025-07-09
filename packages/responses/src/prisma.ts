@@ -1,4 +1,4 @@
-import { camelCase } from "lodash-es";
+import camelCase from "lodash-es/camelCase.js";
 
 /**
  * Given a GraphQL order by input like "DISPLAY_NAME_ASC", return Prisma orderBy input

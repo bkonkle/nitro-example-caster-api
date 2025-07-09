@@ -1,6 +1,6 @@
 import type { Prisma, PrismaClient } from "@prisma/client";
 import { getOffset, paginateResponse } from "@caster/responses/pagination";
-import { omit } from "lodash-es";
+import omit from "lodash-es/omit.js";
 
 import type { CreateInput, UpdateInput } from "./model";
 
